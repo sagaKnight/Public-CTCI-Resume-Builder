@@ -1,0 +1,59 @@
+# .NET Core
+bin/
+obj/
+
+# User-specific files
+.vs/
+.vscode/
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+[Dd]ebug-*
+
+# .NET Core configuration files
+appsettings.Development.json
+appsettings.Production.json
+
+# User secrets (for local development)
+secrets/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# ASP.NET Core temporary files
+wwwroot/
+node_modules/
+
+# Logs
+logs/
+
+# OS generated files
+.DS_Store
+Desktop.ini
+
+# Ignore build output directories
+bin/
+obj/
+
+# Ignore backup files
+*.tmp
+*.bak
+
+# Ignore specific Visual Studio files
+*.user
+*.vs
+*.suo
+*.vscode

@@ -1,0 +1,295 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@Html.AntiForgeryToken()
+
+<div class="container-xxl vh-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <!--Content Div-->
+        <div id="content-div" class="col-sm-10 col-md-7 col-lg-4 col-xl-4 vh-100 overflow-auto disable-scrollbars">
+            <div class="content-section p-3 m-2 rounded row align-items-center justify-content-between">
+                <p class="col-6 m-0 p-0">Editable Title</p>
+                <button type="button" class="col-5 btn btn-success" id="export-btn">Download</button>
+            </div>
+            <div id="personal-section" class="content-section p-3 m-2 rounded">
+                <div class="row" id="personal-wrapper">
+                    <h5></h5>
+                    <p class="mt-2"></p>
+                    <p></p>
+                    <p></p>
+                </div>
+                <div id="personal-input" class="row input-content hidden">
+                    <h4>Personal Information</h4>
+                    <div class="form-group">
+                        <label for="fName">First Name</label>
+                        <input id="fName" class="form-control" type="text" name="fName" value="" autocomplete="off"/>
+                        
+                        <label for="lName">Last Name</label>
+                        <input id="lName" class="form-control" type="text" name="lName" value="" autocomplete="off" />
+                        
+                        <label for="address">Address</label>
+                        <input id="address" class="form-control" type="text" name="address" value="" autocomplete="off" />
+
+                        <label for="email">Email</label>
+                        <input id="email" class="form-control" type="text" name="email" value="" autocomplete="off" />
+
+                        <label for="pNumber">Phone Number</label>
+                        <input id="pNumber" class="form-control" type="text" name="pNumber" value="" autocomplete="off" />
+
+                        <label for="extraInfo">Extra Info</label>
+                        <input id="extraInfo" class="form-control" type="text" name="extraInfo" value="" autocomplete="off" />
+                    </div>
+                    <div class="d-flex justify-content-center input-btns">
+                        <button id="personal-discard" class="btn btn-secondary col-4 text-center mt-3">Discard</button>
+                        <button id="personal-save" class="btn btn-primary col-4 text-center mt-3 mx-2">Save</button>  
+                    </div>
+                </div>
+            </div>
+            <div class="content-section p-3 m-2 rounded align-items-center">
+                <div id="employment-header" class="row content-card">
+                    <div class="content-card-header row">
+                        <h4 class="col-9 m-0">Experience</h4>
+                        <p class="col-3 m-0 text-end">
+                            <svg class="arrow" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="10,15 3,5 17,5" fill="black" />
+                            </svg>
+                        </p>
+                    </div>
+                    <div id="employment-card-box" class="content-card-box hidden mt-3">
+                        <div class="text-center mt-3">
+                            <button type="button" id="add-experience" class="btn btn-primary col-6">+ Experience</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="employment-input" class="row hidden">
+                    <h4>Experience</h4>
+                    <div id="employment-container">
+                        <div class="form-group experience-entry">
+                            <label>Job Title</label>
+                            <input type="text" name="jobTitle" class="form-control" autocomplete="off">
+
+                            <label>Company Name</label>
+                            <input type="text" name="companyName" class="form-control" autocomplete="off">
+
+                            <div class="d-flex mb-1">
+                                <div class="me-4">
+                                    <label>Start Date</label>
+                                    <div class="d-flex">
+                                        <div class="me-2">
+                                            <input type="text" id="startMonth" name="startMonth" class="form-control" placeholder="Month" autocomplete="off">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="startYear" name="startYear" class="form-control" placeholder="Year" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>End Date</label>
+                                    <div class="d-flex">
+                                        <div class="me-2">
+                                            <input type="text" id="endMonth" name="endMonth" class="form-control" placeholder="Month" autocomplete="off">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="endYear" name="endYear" class="form-control" placeholder="Year" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label>Job Responsibilities / Achievements</label>
+                            <textarea name="jobDetails" rows="5" class="form-control" autocomplete="off"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center input-btns">
+                        <button class="btn btn-danger col-3 text-center mt-3 mx-2 del-btn">Delete</button>
+                        <button class="btn btn-secondary col-3 text-center mt-3 mx-2 discard-btn">Discard</button>
+                        <button class="btn btn-primary col-3 text-center mt-3 mx-2 save-btn">Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-section p-3 m-2 rounded align-items-center">
+                <div id="education-header" class="row content-card">
+                    <div class="content-card-header row">
+                        <h4 class="col-9 m-0">Education</h4>
+                        <p class="col-3 m-0 text-end">
+                            <svg class="arrow" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="10,15 3,5 17,5" fill="black" />
+                            </svg>
+                        </p>
+                    </div>
+                    <div id="education-card-box" class="content-card-box hidden mt-3">
+                        <div class="text-center mt-3">
+                            <button type="button" id="add-education" class="btn btn-primary col-6">+ Education</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="education-input" class="row hidden">
+                    <h4>Education</h4>
+                    <div id="education-container">
+                        <div class="form-group education-entry">
+                            <label>University Name</label>
+                            <input type="text" name="universityName" class="form-control" autocomplete="off">
+
+                            <label>Location</label>
+                            <input type="text" name="universityLocation" class="form-control" autocomplete="off">
+
+                            <div class="d-flex mb-1">
+                                <div class="me-4">
+                                    <label>Start Date</label>
+                                    <div class="d-flex">
+                                        <div class="me-2">
+                                            <input type="text" id="startMonth" name="startMonth" class="form-control" placeholder="Month" autocomplete="off">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="startYear" name="startYear" class="form-control" placeholder="Year" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>End Date</label>
+                                    <div class="d-flex">
+                                        <div class="me-2">
+                                            <input type="text" id="endMonth" name="endMonth" class="form-control" placeholder="Month" autocomplete="off">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="endYear" name="endYear" class="form-control" placeholder="Year" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label>Relevant Coursework / Achievements</label>
+                            <textarea name="educationDetails" class="form-control" rows="5" autocomplete="off"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center input-btns">
+                        <button class="btn btn-danger col-3 text-center mt-3 mx-2 del-btn">Delete</button>
+                        <button class="btn btn-secondary col-3 text-center mt-3 mx-2 discard-btn">Discard</button>
+                        <button class="btn btn-primary col-3 text-center mt-3 mx-2 save-btn">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section p-3 m-2 rounded align-items-center">
+                <div id="technical-header" class="row content-card">
+                    <div class="content-card-header row">
+                        <h4 class="col-9 m-0">Technical Experience</h4>
+                        <p class="col-3 m-0 text-end">
+                            <svg class="arrow" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="10,15 3,5 17,5" fill="black" />
+                            </svg>
+                        </p>
+                    </div>
+                    <div id="technical-card-box" class="content-card-box hidden mt-3">
+                        <div class="text-center mt-3">
+                            <button type="button" id="add-technical" class="btn btn-primary col-6">+ Project</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="technical-input" class="row hidden">
+                    <h4>Technical Experience</h4>
+                    <div id="technical-container">
+                        <div class="form-group technical-experience-entry">
+                            <label>Project Title</label>
+                            <input type="text" name="projectTitle" class="form-control">
+
+                            <label>Project Description</label>
+                            <textarea name="projectDescription" rows="5" class="form-control"></textarea>
+
+                            <label>Technologies Used</label>
+                            <input type="text" name="technologiesUsed" class="form-control">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center input-btns">
+                        <button class="btn btn-danger col-3 text-center mt-3 mx-2 del-btn">Delete</button>
+                        <button class="btn btn-secondary col-3 text-center mt-3 mx-2 discard-btn">Discard</button>
+                        <button class="btn btn-primary col-3 text-center mt-3 mx-2 save-btn">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section p-3 m-2 rounded align-items-center">
+                <div id="additional-header" class="row content-card">
+                    <div class="content-card-header row">
+                        <h4 class="col-9 m-0">Additional Experience and Awards</h4>
+                        <p class="col-3 m-0 text-end">
+                            <svg class="arrow" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="10,15 3,5 17,5" fill="black" />
+                            </svg>
+                        </p>
+                    </div>
+                    <div id="additional-card-box" class="content-card-box hidden mt-3">
+                        <div class="text-center mt-3">
+                            <button type="button" id="add-additional" class="btn btn-primary col-6">+ Experience / Award</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="additional-input" class="row hidden">
+                    <h4>Additional Experience and Awards</h4>
+                    <div id="additional-container">
+                        <div class="form-group additional-entry">
+                            <label>Additional Title</label>
+                            <input type="text" name="additionalTitle" class="form-control">
+
+                            <label>Additional Description</label>
+                            <textarea name="additionalDesc" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center input-btns">
+                        <button class="btn btn-danger col-3 text-center mt-3 mx-2 del-btn">Delete</button>
+                        <button class="btn btn-secondary col-3 text-center mt-3 mx-2 discard-btn">Discard</button>
+                        <button class="btn btn-primary col-3 text-center mt-3 mx-2 save-btn">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section p-3 m-2 rounded align-items-center">
+                <div id="lang-header" class="row content-card">
+                    <div class="content-card-header row">
+                        <h4 class="col-9 m-0">Languages and Technologies</h4>
+                        <p class="col-3 m-0 text-end">
+                            <svg class="arrow" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="10,15 3,5 17,5" fill="black" />
+                            </svg>
+                        </p>
+                    </div>
+                    <div id="lang-card-box" class="content-card-box hidden mt-3">
+                        <div class="text-center mt-3">
+                            <button type="button" id="add-lang" class="btn btn-primary col-6">+ Languages and Technologies</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="lang-input" class="row hidden">
+                    <h4>Languages and Technologies</h4>
+                    <div id="lang-container">
+                        <div class="form-group lang-entry">
+                            <label>Languages and Technologies</label>
+                            <textarea name="langTech" rows="5" class="form-control" placeholder="List all relevant languages and technologies (e.g., JavaScript, Python, React, SQL, etc.)"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center input-btns">
+                        <button class="btn btn-danger col-3 text-center mt-3 mx-2 del-btn">Delete</button>
+                        <button class="btn btn-secondary col-3 text-center mt-3 mx-2 discard-btn">Discard</button>
+                        <button class="btn btn-primary col-3 text-center mt-3 mx-2 save-btn">Save</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+        <!--Resume Div -->
+        <div id="resume-view" class="col-sm-12 col-md-12 col-lg-6 col-xl-7 vh-100 d-flex justify-content-center align-items-center">
+            <div id="resume-page" style="box-shadow: 0px 3px 15px rgba(0,0,0,0.2); border: 1px #d3d3d3 solid; background: white; width: 210mm; height: 297mm; overflow: auto; position: absolute; padding: 20px; font-family: 'Garamond'; padding: 1.2cm;">
+                <div id="resume-content">
+                    <div id="resume-page-heading" style="display: flex; align-items: center; justify-content: space-between; flex-direction: column;">
+                        <h2 style="width: 100%; text-align: center; margin: 0;">Rino Miguel Quijote</h2>
+                        <p style="margin: 3px; text-align: center;"></p>
+                        <p style="margin: 3px; text-align: center;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
