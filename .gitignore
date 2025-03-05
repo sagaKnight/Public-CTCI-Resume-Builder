@@ -34,7 +34,7 @@ Thumbs.db
 ehthumbs.db
 
 # ASP.NET Core temporary files
-wwwroot/
+wwwroot/lib/
 node_modules/
 
 # Logs
@@ -57,3 +57,4 @@ obj/
 *.vs
 *.suo
 *.vscode
+/Resume Builder/wwwroot/lib
