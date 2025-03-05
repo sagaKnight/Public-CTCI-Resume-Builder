@@ -21,10 +21,10 @@ namespace Resume_Builder.Pages
         public IActionResult OnPostExportPdf([FromBody] string data)
         {
             HtmlToPdf converter = new HtmlToPdf();
-            converter.Options.MarginTop = 30;
-            converter.Options.MarginBottom = 30;
-            converter.Options.MarginLeft = 30;
-            converter.Options.MarginRight = 30;
+            converter.Options.MarginTop = 50;
+            converter.Options.MarginBottom = 50;
+            converter.Options.MarginLeft = 50;
+            converter.Options.MarginRight = 50;
 
             PdfDocument pdfDoc = converter.ConvertHtmlString(data);
 
