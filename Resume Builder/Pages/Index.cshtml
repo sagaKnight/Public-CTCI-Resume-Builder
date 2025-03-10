@@ -4,9 +4,10 @@
     ViewData["Title"] = "Home page";
 }
 @Html.AntiForgeryToken()
-<!--Public Builder -->
+
 <div class="container-xxl vh-100">
     <div class="row h-100 justify-content-center align-items-center">
+
         <!--Content Div-->
         <div id="content-div" class="col-sm-10 col-md-7 col-lg-4 col-xl-4 vh-100 overflow-auto disable-scrollbars">
             <div class="content-section p-3 m-2 rounded row align-items-center justify-content-between">
@@ -50,8 +51,8 @@
                         <input id="extraInfo" class="form-control mb-2" type="text" name="extraInfo" value="" autocomplete="off" placeholder="Enter an extra link (optional)" />
                     </div>
                     <div class="d-flex justify-content-center input-btns">
-                        <button id="personal-discard" class="btn col-4 text-center mt-3 fw-bold">Discard</button>
-                        <button id="personal-save" class="btn btn-primary col-4 text-center mt-3 mx-2 fw-bold">Save</button>
+                        <button id="personal-discard" class="btn btn-secondary col-4 text-center mt-3">Discard</button>
+                        <button id="personal-save" class="btn btn-primary col-4 text-center mt-3 mx-2">Save</button>
                     </div>
                 </div>
             </div>
@@ -152,11 +153,11 @@
 
                     <div id="education-container">
                         <div class="form-group education-entry">
-                            <label>University Name</label>
-                            <input type="text" name="universityName" class="form-control" placeholder="Enter university name" autocomplete="off">
-
                             <label>Location</label>
                             <input type="text" name="universityLocation" class="form-control" placeholder="Enter location" autocomplete="off">
+
+                            <label>University Name</label>
+                            <input type="text" name="universityName" class="form-control" placeholder="Enter university name" autocomplete="off">
 
                             <div class="d-flex mb-1">
                                 <div class="me-4">
@@ -283,7 +284,7 @@
                             <input type="text" name="additionalTitle" class="form-control" placeholder="Enter title of additional experience or award" autocomplete="off">
 
                             <label>Additional Description</label>
-                            <textarea name="additionalDesc" rows="5" class="form-control" placeholder="Provide details about the experience or award" autocomplete="off"></textarea>
+                            <textarea name="additionalDesc" rows="5" class="form-control" placeholder="Provide details about the experience or award"></textarea>
                         </div>
                     </div>
 
@@ -343,6 +344,14 @@
                             <button class="btn btn-primary col-6 text-center mt-3 save-btn fw-bold">Save</button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="content-section p-3 m-2 rounded align-items-center row gap-1 justify-content-center">
+                <button type="button" class="col-5 btn btn-dark" id="importJSON-btn">Import JSON</button>
+                <button type="button" class="col-5 btn btn-dark" id="exportJSON-btn">Export JSON</button>
+                <div class="border p-3 m-2 rounded align-items-center row justify-content-center hidden">
+                    <input type="file" id="jsonInput" />
                 </div>
             </div>
         </div>

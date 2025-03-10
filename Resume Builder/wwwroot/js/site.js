@@ -14,8 +14,6 @@ for (let i = 2; i < contentSections.length; i++) {
         const isCardHeader = "content-card-header";
         const isBtn = e.target.nodeName === 'BUTTON' && e.target.id == '';
         let cardHeader = e.target.closest(`.${isCardHeader}`) || e.target.parentElement.parentElement;
-        //Fix this below.
-        console.log(cardHeader);
         if (cardHeader.classList.contains(isCardHeader)) {
             toggleContentSection(cardHeader, isBtn);
             toggleArrow(cardHeader);
@@ -39,12 +37,6 @@ function toggleAnimation(cardBox) {
     }
 }
 
-function toggleContentSection(button) {
-    let contentSection = $(button).closest('.content-section');
-    contentSection.find('.content-section-header').toggleClass('hidden');
-    contentSection.find('.content-section-input').toggleClass('hidden');
-}
-
 function toggleContentSection(cardHeader, isBtn) {
     const selectedContentHeader = cardHeader.parentElement;
     const selectedContentSection = selectedContentHeader.parentElement;
@@ -54,14 +46,6 @@ function toggleContentSection(cardHeader, isBtn) {
                 let cardBox = child;
                 toggleAnimation(cardBox);
                 cardBox.classList.toggle("hidden");
-                let cardInfos = cardBox.getElementsByClassName("content-card-info");
-                for (const cardInfo of cardInfos) {
-                    cardInfo.addEventListener("click", () => {
-                        for (const child of selectedContentSection.children) {
-                            child.classList.toggle("hidden");
-                        }
-                    });
-                }
             }
         }
     } else {

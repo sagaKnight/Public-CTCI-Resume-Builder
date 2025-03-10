@@ -1,4 +1,7 @@
 let savedPersonalData = {};
+let editingSectionData = null;
+let dataCounter = 1;
+let resumeInputs = {};
 
 /* Personal Section */
 $("#personal-wrapper").on('click', function () {
@@ -7,23 +10,28 @@ $("#personal-wrapper").on('click', function () {
 
 $("#personal-input .form-group input").on('input', function () {
     let tempData = getPersonalDetails();
-    setPersonalDetails(tempData);
+    writePersonalDetails(tempData);
 });
 
 $("#personal-discard").on('click', function (e) {
-    setPersonalDetails(savedPersonalData);
+    writePersonalDetails(savedPersonalData);
     getPersonalDetails();
     togglePersonalSection();
-    resetPersonalDetails();
+    rewritePersonalDetails();
 })
 
 $("#personal-save").on('click', function (e) {
     let newData = getPersonalDetails();
-    setPersonalDetails(newData);
-    savedPersonalData = {};
-    removePlaceholderClass();
+    savePersonalData(newData);
     togglePersonalSection();
 });
+
+function savePersonalData(data) {
+    writePersonalDetails(data);
+    savedPersonalData = {};
+    removePlaceholderClass();
+    saveJSONInput("personal", data);
+}
 
 function getPersonalDetails() {
     let fName = $("#fName").val();
@@ -49,8 +57,6 @@ function removePlaceholderClass() {
 
     $('#personal-wrapper').children().each(function () {
         const textValue = $(this).text().trim();
-        console.log(textValue);
-        console.log(!placeholders.includes(textValue));
         if (!placeholders.includes(textValue)) {
             $(this).removeClass('grey-text');
         } else {
@@ -59,7 +65,7 @@ function removePlaceholderClass() {
     });
 }
 
-function setPersonalDetails(data) {
+function writePersonalDetails(data) {
     $("#resume-page-heading h2").text(data.fName + " " + data.lName);
     $("#resume-page-heading p:nth-of-type(1)").text(data.address);
     let contactHtml = '';
@@ -88,7 +94,7 @@ function setPersonalDetails(data) {
     $("#personal-wrapper p:nth-of-type(3)").text(data.pNumber || "Phone Number");
 }
 
-function resetPersonalDetails() {
+function rewritePersonalDetails() {
     $("#fName").val(savedPersonalData.fName);
     $("#lName").val(savedPersonalData.lName);
     $("#address").val(savedPersonalData.address);
@@ -104,11 +110,9 @@ function resetPersonalDetails() {
 }
 
 /* Content Functions */
-let editingSectionData = null;
-let dataCounter = 1;
 function toggleContentInput(section) {
-    $(`#${section}-header`).toggleClass('hidden');
-    $(`#${section}-input`).toggleClass('hidden');
+    $(`#${section}-header`).addClass('hidden');
+    $(`#${section}-input`).removeClass('hidden');
 }
 
 function setSectionHeading(section, headingText) {
@@ -164,10 +168,8 @@ function createLangDetails(data, section) {
     const value = dataCounter;
     newCardInfoDiv.on('click', function () {
         editingSectionData = value;
-        toggleContentInput(section);
         preloadFormInputs(editingSectionData, section);
     });
-
     newCardInfoDiv.append(`
       <h5 class="d-inline">${data.langTech[0].length > 8 ? data.langTech[0].slice(0, 8) + '...' : data.langTech[0]}</h5>
     `);
@@ -175,6 +177,7 @@ function createLangDetails(data, section) {
     $(`#${section}-input`).data("storedContentInfo" + dataCounter, { newCard: newCardInfoDiv, div: newDiv, data: data });
     $(`#resume-${section}`).append(newDiv);
     $(`#${section}-card-box .text-center.mt-3`).before(newCardInfoDiv);
+    editingSectionData = value;
 }
 
 function createUndatedDetails(data, section) {
@@ -216,25 +219,23 @@ function createUndatedDetails(data, section) {
     const value = dataCounter;
     newCardInfoDiv.on('click', function () {
         editingSectionData = value;
-        toggleContentInput(section);
         preloadFormInputs(editingSectionData, section);
     });
 
     newCardInfoDiv.append(`
         <h5 class="d-inline">${data.projectTitle || data.additionalTitle || ''}</h5>
     `);
-
     $(`#${section}-input`).data("storedContentInfo" + dataCounter, { newCard: newCardInfoDiv, div: newDiv, data: data });
     $(`#resume-${section}`).append(newDiv);
     $(`#${section}-card-box .text-center.mt-3`).before(newCardInfoDiv);
     dataCounter++;
+    editingSectionData = value;
 }
 
 function createDatedDetails(data, section) {
     let newDiv = $('<div></div>').addClass('resume-section');
     let primaryTitle = section === "employment" ? data.jobTitle : data.universityLocation || "";
     let secondaryTitle = section === "employment" ? data.companyName : data.universityName || "";
-
     //For both jobs and education
     let detailsList = (data.jobDetails || data.educationDetails || [])
         .filter(detail => detail?.trim())  // Remove empty/whitespace-only details
@@ -245,7 +246,7 @@ function createDatedDetails(data, section) {
     <div class="resume-section-header" style="display: flex; align-items: center; justify-content: space-between; padding-left: 15px; padding-right: 15px">
         <h6 style="margin: 0px; width: 27%;"><strong>${primaryTitle}</strong></h6>
         <h6 style="margin: 0px; width: 46%; text-align: center;"><strong>${secondaryTitle}</strong></h6>
-        <h6 style="margin: 0px; width: 27%; text-align: right;"><strong>${data.dateText}</strong></h6>
+        <h6 style="margin: 0px; width: 27%; text-align: right;"><strong>${data.dateText || ""}</strong></h6>
     </div>
     <ul>
         ${detailsList}
@@ -253,9 +254,7 @@ function createDatedDetails(data, section) {
 `);
 
     let newCardInfoDiv = $('<div></div>').addClass('content-card-info border-top border-bottom pt-3 pb-3')
-
     $(`#${section}-input`).data("storedContentInfo" + dataCounter, { newCard: newCardInfoDiv, div: newDiv, data: data });
-
     const value = dataCounter;
     newCardInfoDiv.on('click', function () {
         editingSectionData = value;
@@ -270,33 +269,40 @@ function createDatedDetails(data, section) {
     $(`#resume-${section}`).append(newDiv);
     $(`#${section}-card-box .text-center.mt-3`).before(newCardInfoDiv);
     dataCounter++;
+    editingSectionData = value;
 }
 
-function editContentDetails(newData, section) {
+function editContentDetails(overwriteData, section, isSave) {
     let storedData = $(`#${section}-input`).data("storedContentInfo" + editingSectionData);
     if (section === "employment" || section === "education") {
-        editDatedDetails(newData, section, storedData);
+        editDatedDetails(overwriteData, section, storedData, isSave);
     } else if (section === "technical" || section === "additional") {
-        editUndatedDetails(newData, section, storedData);
+        editUndatedDetails(overwriteData, section, storedData, isSave);
     } else {
-        editLangDetails(newData, section, storedData);
+        editLangDetails(overwriteData, section, storedData, isSave);
     }
 }
 
-function editLangDetails(newData, section, storedData) {
+function editLangDetails(newData, section, storedData, isSave) {
     let resumeDotpoints = storedData.div;
     let newCardDiv = storedData.newCard;
     resumeDotpoints.empty();
+    let ul = $('<ul></ul>');
     newData.langTech.forEach(line => {
         let li = $(`<li>${line}</li>`);
-        resumeDotpoints.append(li);
+        ul.append(li);
     });
-    newCardDiv.find('h5').text(newData.langTech[0].length > 8 ? newData.langTech[0].slice(0, 8) + '...' : newData.langTech[0]);
-    $(`#${section}-input`).data("storedContentInfo" + editingSectionData, { newCard: newCardDiv, div: resumeDotpoints, data: newData });
-    editingSectionData = null;
+    resumeDotpoints.append(ul);
+    newCardDiv.find('h5').text(newData.langTech[0].length > 20 ? newData.langTech[0].slice(0, 20) + '...' : newData.langTech[0]);
+    if (isSave) {
+        $(`#${section}-input`).data("storedContentInfo" + editingSectionData, { newCard: newCardDiv, div: resumeDotpoints, data: newData });
+    }
+    if (isSave && (resumeDotpoints.length === 0 || newData.langTech[0].length <= 1)) {
+        deleteContentBox(section);
+    }
 }
 
-function editUndatedDetails(newData, section, storedData) {
+function editUndatedDetails(newData, section, storedData, isSave) {
     let titleDiv = storedData.div.find('.undated-title-info');
     let descDiv = storedData.div.find('.undated-description');
     let newCardDiv = storedData.newCard;
@@ -322,30 +328,47 @@ function editUndatedDetails(newData, section, storedData) {
         descDiv.html(ul);
     }
     newCardDiv.find('h5').text(newData.projectTitle || newData.additionalTitle);
-    $(`#${section}-input`).data("storedContentInfo" + editingSectionData, { newCard: newCardDiv, div: storedData.div, data: newData });
-    editingSectionData = null;
+    if (isSave) {
+        $(`#${section}-input`).data("storedContentInfo" + editingSectionData, { newCard: newCardDiv, div: storedData.div, data: newData });
+    }
+    if (descriptions[0].length <= 1 && isSave) {
+        if ((section === "technical" && (!newData.projectTitle || newData.projectTitle.length === 1 || !newData.technologiesUsed
+            || newData.technologiesUsed === 1 || newData.repoLink === 1 || !newData.repoLink)) ||
+            (section === "additional" && (!newData.additionalTitle || newData.additionalTitle.length === 1))) {
+            deleteContentBox(section);
+        }
+    }
 }
 
-function editDatedDetails(newData, section, storedData) {
+function editDatedDetails(newData, section, storedData, isSave) {
     let resumeDiv = storedData.div;
     let newCardDiv = storedData.newCard;
-    let primaryTitle = section === "employment" ? newData.jobTitle : newData.universityName || "";
-    let secondaryTitle = section === "employment" ? newData.companyName : newData.universityLocation || "";
+    let primaryTitle = section === "employment" ? newData.jobTitle : newData.universityLocation || "";
+    let secondaryTitle = section === "employment" ? newData.companyName : newData.universityName || "";
     let dateText = newData.dateText || "";
-    resumeDiv.find('.resume-section-header h6:nth-child(1) strong').text(primaryTitle);
-    resumeDiv.find('.resume-section-header h6:nth-child(2) strong').text(secondaryTitle);
-    resumeDiv.find('.resume-section-header h6:nth-child(3) strong').text(dateText);
+    resumeDiv.find('.resume-section-header h6:nth-child(1) strong').text(primaryTitle || "");
+    resumeDiv.find('.resume-section-header h6:nth-child(2) strong').text(secondaryTitle || "");
+    resumeDiv.find('.resume-section-header h6:nth-child(3) strong').text(dateText || "");
     resumeDiv.find('ul').empty();
-    (newData[section === "employment" ? "jobDetails" : "educationDetails"] || []).forEach(detail => {
+    let dotpointData = newData[section === "employment" ? "jobDetails" : "educationDetails"] || [];
+    dotpointData.forEach(detail => {
         if (detail?.trim()) {
             resumeDiv.find('ul').append(`<li>${detail}</li>`);
         }
     });
-    newCardDiv.find('h5').text(primaryTitle + ",");
-    newCardDiv.find('h6').text(secondaryTitle);
-    newCardDiv.find('p').text(dateText);
-    $(`#${section}-input`).data("storedContentInfo" + editingSectionData, { newCard: newCardDiv, div: resumeDiv, data: newData });
-    editingSectionData = null;
+    newCardDiv.find('h5').text(primaryTitle || "" + ",");
+    newCardDiv.find('h6').text(secondaryTitle || "");
+    newCardDiv.find('p').text(dateText || "");
+    if (isSave) {
+        $(`#${section}-input`).data("storedContentInfo" + editingSectionData, { newCard: newCardDiv, div: resumeDiv, data: newData });
+    }
+    if (dotpointData && dotpointData[0] && dotpointData[0].length <= 1 || dotpointData.length === 1 && dotpointData[0].length <= 1) {
+        if ((!primaryTitle || primaryTitle.length <= 1) &&
+            (!secondaryTitle || secondaryTitle.length <= 1) &&
+            (!dateText || dateText.length <= 1)) {
+            deleteContentBox(section);
+        }
+    }
 }
 
 function preloadFormInputs(editingSectionData, section) {
@@ -365,6 +388,11 @@ function preloadFormInputs(editingSectionData, section) {
 }
 
 function discardContentBox(section) {
+    if (editingSectionData) {
+        let oldData = $(`#${section}-input`).data("storedContentInfo" + editingSectionData);
+        clearContentInput(section);
+        editContentDetails(oldData.data, section, true);
+    }
     let heading = $(`#resume-${section}`);
     if (heading.children().length < 3) {
         heading.remove();
@@ -375,6 +403,7 @@ function discardContentBox(section) {
 function deleteContentBox(section) {
     if (editingSectionData) {
         let storedData = $(`#${section}-input`).data("storedContentInfo" + editingSectionData);
+        deleteJSONInput(section, storedData.data);
         let foundDiv = $(`#resume-${section}`).find(storedData.div);
         if (foundDiv.length) {
             foundDiv.remove();
@@ -462,69 +491,70 @@ $("#add-lang").on('click', function () {
 
 /* Save Buttons */
 
-$("#employment-input .input-btns div .save-btn").on('click', function () {
-    let section = "employment";
+function saveDatedData(data, section) {
     if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
+        editContentDetails(data, section, true);
         clearContentInput(section);
     } else {
-        let newData = getInputDetails(section);
-        createNewDetails(newData, section);
+        createNewDetails(data, section);
         clearContentInput(section);
     }
+    editingSectionData = null;
+    saveJSONInput(section, data);
+}
+
+$("#employment-input .input-btns div .save-btn").on('click', function () {
+    let section = "employment";
+    let newData = getInputDetails(section);
+    saveDatedData(newData, section);
 })
 
 $("#education-input .input-btns div .save-btn").on('click', function () {
     let section = "education";
-    if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
-        clearContentInput(section);
-    } else {
-        let newData = getInputDetails(section);
-        createNewDetails(newData, section);
-        clearContentInput(section);
-    }
+    let newData = getInputDetails(section);
+    saveDatedData(newData, section);
 })
 
 $("#technical-input .input-btns div .save-btn").on('click', function () {
     let section = "technical";
+    let newData = getInputDetails(section);
     if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
+        editContentDetails(newData, section, true);
         clearContentInput(section);
     } else {
-        let newData = getInputDetails(section);
         createNewDetails(newData, section);
         clearContentInput(section);
     }
+    editingSectionData = null;
+    saveJSONInput(section, newData);
 })
 
 $("#additional-input .input-btns div .save-btn").on('click', function () {
     let section = "additional";
+    let newData = getInputDetails(section);
     if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
+        editContentDetails(newData, section, true);
         clearContentInput(section);
     } else {
-        let newData = getInputDetails(section);
         createNewDetails(newData, section);
         clearContentInput(section);
     }
+    editingSectionData = null;
+    saveJSONInput(section, newData);
 })
 
 $("#lang-input .input-btns div .save-btn").on('click', function () {
     let section = "lang";
+    let newData = getInputDetails(section);
     if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
+        editContentDetails(newData, section, true);
         clearContentInput(section);
     } else {
-        let newData = getInputDetails(section);
         createNewDetails(newData, section);
         clearContentInput(section);
     }
+    editingSectionData = null;
+    saveJSONInput(section, newData);
 })
 
 /* Discard & Delete Buttons */
@@ -568,3 +598,175 @@ $("#lang-input .input-btns div .discard-btn").on('click', function (e) {
 $("#lang-input .input-btns div .del-btn").on('click', function (e) {
     deleteContentBox("lang");
 });
+
+/* Live Preview Event Listeners */
+
+$("#employment-input .form-group input, #employment-input .form-group textarea").on('input', function () {
+    let section = "employment";
+    if (editingSectionData) {
+        let newData = getInputDetails(section);
+        editContentDetails(newData, section);
+    } else {
+        let newData = getInputDetails(section);
+        createNewDetails(newData, section);
+    }
+});
+
+$("#education-input .form-group input, #education-input .form-group textarea").on('input', function () {
+    let section = "education";
+    if (editingSectionData) {
+        let newData = getInputDetails(section);
+        editContentDetails(newData, section);
+    } else {
+        let newData = getInputDetails(section);
+        createNewDetails(newData, section);
+    }
+});
+
+$("#technical-input .form-group input, #technical-input .form-group textarea").on('input', function () {
+    let section = "technical";
+    if (editingSectionData) {
+        let newData = getInputDetails(section);
+        editContentDetails(newData, section);
+    } else {
+        let newData = getInputDetails(section);
+        createNewDetails(newData, section);
+    }
+});
+
+$("#additional-input .form-group input, #additional-input .form-group textarea").on('input', function () {
+    let section = "additional";
+    if (editingSectionData) {
+        let newData = getInputDetails(section);
+        editContentDetails(newData, section);
+    } else {
+        let newData = getInputDetails(section);
+        createNewDetails(newData, section);
+    }
+});
+
+$("#lang-input .form-group textarea").on('input', function () {
+    let section = "lang";
+    if (editingSectionData) {
+        let newData = getInputDetails(section);
+        editContentDetails(newData, section);
+    } else {
+        let newData = getInputDetails(section);
+        createNewDetails(newData, section);
+    }
+});
+
+/* JSON Functions */
+
+function saveJSONInput(section, data) {
+    if (!resumeInputs[section]) {
+        resumeInputs[section] = [];
+    }
+    const shouldPush = Object.values(data).some(value => value.length > 1);
+    if (shouldPush) {
+        resumeInputs[section].push(data);
+    }
+}
+
+function deleteJSONInput(section, data) {
+    if (!resumeInputs[section]) {
+        return
+    }
+    const indexFound = resumeInputs[section].findIndex(item =>
+        Object.entries(data).every(([key, value]) => item[key] === value)
+    );
+    if (indexFound >= 0) {
+        resumeInputs[section].splice(indexFound, 1);
+    }
+}
+
+function importJSONInput() {
+    $.each(resumeInputs, function (section, data) {
+        if (section === "personal") {
+            $.each(data, function (i, personalData) {
+                savePersonalData(personalData);
+            });
+        } else if (section === "employment" || section === "education") {
+            $.each(data, function (i, datedData) {
+                if (section === "employment") {
+                    setSectionHeading(section, "Experience");
+                } else {
+                    setSectionHeading(section, "Education");
+                }
+                saveDatedData(datedData, section);
+
+            });
+        } else if (section === "technical" || section === "additional") {
+            $.each(data, function (i, undatedData) {
+                if (section === "technical") {
+
+                } else {
+                    setSectionHeading(section, "Additional Experience and Awards");
+                }
+                saveDatedData(undatedData, section);
+            });
+        } else if (section === "lang") {
+            setSectionHeading(section, "Languages and Technologies");
+            $.each(data, function (i, langData) {
+                saveDatedData(langData, section);
+            });
+        };
+    });
+}
+
+function clearAllData() {
+    document.getElementById("resume-view").innerHTML = `
+        <div id="resume-page" style="box-shadow: 0px 3px 15px rgba(0,0,0,0.2); border: 1px #d3d3d3 solid; background: white; width: 210mm; height: 297mm; overflow: auto; position: absolute; padding: 20px; font-family: 'Garamond'; padding: 1.2cm;">
+            <div id="resume-content">
+                <div id="resume-page-heading" style="display: flex; align-items: center; justify-content: space-between; flex-direction: column;">
+                    <h2 style="width: 100%; text-align: center; margin: 0;"></h2>
+                    <p style="margin: 3px; text-align: center;"></p>
+                    <p style="margin: 3px; text-align: center;"></p>
+                </div>
+            </div>
+        </div>
+    `;
+    const contentCards = document.querySelectorAll(".content-card-info");
+    contentCards.forEach(card => card.remove());
+    dataCounter = 1;
+    editingSectionData = null;
+    savedPersonalData = {};
+}
+
+$("#exportJSON-btn").on("click", function () {
+    const jsonData = JSON.stringify(resumeInputs);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'resume.json';
+    $('body').append(link);
+    link.click();
+    $(link).remove();
+})
+
+$("#importJSON-btn").on("click", function () {
+    $('#jsonInput').slideDown("slow");
+    $('#jsonInput').parent().toggleClass("hidden");
+})
+
+$("#jsonInput").on("change", function (e) {
+    const file = e.target.files[0];
+    if (file && file.type === 'application/json') {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            try {
+                resumeInputs = JSON.parse(e.target.result);  // Parse the JSON data
+                $("#jsonInput").val('');
+                $('#jsonInput').parent().toggleClass("hidden");
+                clearAllData();
+                importJSONInput();
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+            }
+        };
+        reader.readAsText(file);  // Read the file as text
+    } else {
+        console.error('Please select a valid JSON file.');
+    }
+})
+
