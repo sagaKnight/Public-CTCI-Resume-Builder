@@ -34,7 +34,6 @@ Thumbs.db
 ehthumbs.db
 
 # ASP.NET Core temporary files
-wwwroot/lib/
 node_modules/
 
 # Logs
