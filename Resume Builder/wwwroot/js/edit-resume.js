@@ -71,11 +71,11 @@ function writePersonalDetails(data) {
     let contactHtml = '';
 
     contactHtml += '<span style="margin-right: 10px;">' + data.email + '</span>';
-    contactHtml += '<span style="margin-right: 10px;">|</span>';
+    contactHtml += '<span style="margin-right: 10px;">|</span>'; 
     contactHtml += '<span style="margin-right: 10px;">' + data.pNumber + '</span>';
 
     if (data.extraInfo && data.extraInfo.trim() !== "") {
-        contactHtml += '<span style="margin-right: 10px;">|</span>';
+        contactHtml += '<span style="margin-right: 10px;">|</span>'; 
         if (!data.extraInfo.includes("www.")) {
             contactHtml += '<span><a href="https://' + data.extraInfo + '" target="_blank">' + data.extraInfo + '</a></span>';
         } else {
@@ -133,8 +133,8 @@ function setSectionHeading(section, headingText) {
             style: 'margin-top: 2px; margin-bottom: 2px;'
         });
 
-        newDiv.append(newH6);
-        newDiv.append(newHr);
+        newDiv.append(newH6);  
+        newDiv.append(newHr);   
 
         $(`#resume-content`).append(newDiv);
     }
@@ -168,6 +168,7 @@ function createLangDetails(data, section) {
     const value = dataCounter;
     newCardInfoDiv.on('click', function () {
         editingSectionData = value;
+        toggleContentInput(section);
         preloadFormInputs(editingSectionData, section);
     });
     newCardInfoDiv.append(`
@@ -182,7 +183,6 @@ function createLangDetails(data, section) {
 
 function createUndatedDetails(data, section) {
     let newDiv = $('<div></div>').addClass('resume-section');
-
     // Create the title, languages, and repo link section
     let titleDiv = $('<div></div>').addClass('undated-title-info');
     let languages = data.technologiesUsed || '';
@@ -200,7 +200,6 @@ function createUndatedDetails(data, section) {
         <h6 class="d-inline"><strong>${data.additionalTitle || ''}</strong></h6>
     `);
     }
-
     newDiv.append(titleDiv);
 
     let projectDescriptionDiv = $('<div></div>').addClass('undated-description');
@@ -219,6 +218,7 @@ function createUndatedDetails(data, section) {
     const value = dataCounter;
     newCardInfoDiv.on('click', function () {
         editingSectionData = value;
+        toggleContentInput(section);
         preloadFormInputs(editingSectionData, section);
     });
 
@@ -290,7 +290,7 @@ function editLangDetails(newData, section, storedData, isSave) {
     let ul = $('<ul></ul>');
     newData.langTech.forEach(line => {
         let li = $(`<li>${line}</li>`);
-        ul.append(li);
+        ul.append(li);      
     });
     resumeDotpoints.append(ul);
     newCardDiv.find('h5').text(newData.langTech[0].length > 20 ? newData.langTech[0].slice(0, 20) + '...' : newData.langTech[0]);
@@ -318,7 +318,7 @@ function editUndatedDetails(newData, section, storedData, isSave) {
             </h6>
             <p style="display:inline-block; margin: 0"> | </p>
             <p style="display:inline-block; margin: 0">${newData.technologiesUsed || ''}</p>
-            ${newData.repoLink ? `<p style="display:inline-block; margin: 0"> | <a href="${newData.repoLink}" target="_blank">Project Repo</a></p>` : ''}
+            ${newData.repoLink ? `<p style="display:inline-block; margin: 0"> | <a href="${newData.repoLink}" target="_blank">Link</a></p>` : ''}
         `);
         descDiv.html(ul);
     } else {
@@ -352,7 +352,7 @@ function editDatedDetails(newData, section, storedData, isSave) {
     resumeDiv.find('ul').empty();
     let dotpointData = newData[section === "employment" ? "jobDetails" : "educationDetails"] || [];
     dotpointData.forEach(detail => {
-        if (detail?.trim()) {
+        if (detail?.trim()) {  
             resumeDiv.find('ul').append(`<li>${detail}</li>`);
         }
     });
@@ -393,11 +393,15 @@ function discardContentBox(section) {
         clearContentInput(section);
         editContentDetails(oldData.data, section, true);
     }
+    removeHeading(section)
+    editingSectionData = null;
+}
+
+function removeHeading(section) {
     let heading = $(`#resume-${section}`);
     if (heading.children().length < 3) {
         heading.remove();
     }
-    editingSectionData = null;
 }
 
 function deleteContentBox(section) {
@@ -412,6 +416,7 @@ function deleteContentBox(section) {
         if (foundCard.length) {
             foundCard.remove();
         }
+        removeHeading(section);
         editingSectionData = null;
     }
 }
@@ -449,7 +454,7 @@ function getInputDetails(section) {
 }
 
 function clearContentInput(section) {
-    $(`#${section}-container .form-group`).find("input, textarea, select").val("");
+    $(`#${section}-container .form-group`).find("input, textarea, select").val(""); 
 }
 
 /* Add Buttons */
@@ -670,7 +675,7 @@ function saveJSONInput(section, data) {
 
 function deleteJSONInput(section, data) {
     if (!resumeInputs[section]) {
-        return
+        return  
     }
     const indexFound = resumeInputs[section].findIndex(item =>
         Object.entries(data).every(([key, value]) => item[key] === value)
@@ -699,7 +704,7 @@ function importJSONInput() {
         } else if (section === "technical" || section === "additional") {
             $.each(data, function (i, undatedData) {
                 if (section === "technical") {
-
+                    setSectionHeading(section, "Projects");
                 } else {
                     setSectionHeading(section, "Additional Experience and Awards");
                 }

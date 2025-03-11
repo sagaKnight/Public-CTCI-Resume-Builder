@@ -57,79 +57,6 @@
                 </div>
             </div>
             <div class="content-section p-3 m-2 rounded align-items-center">
-                <div id="employment-header" class="row content-card">
-                    <div class="content-card-header row">
-                        <h4 class="col-9 m-0">Experience</h4>
-                        <p class="col-3 m-0 text-end">
-                            <svg class="arrow" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <polygon points="10,15 3,5 17,5" fill="black" />
-                            </svg>
-                        </p>
-                    </div>
-                    <div id="employment-card-box" class="content-card-box hidden mt-3">
-                        <div class="text-center mt-3">
-                            <button type="button" id="add-experience" class="btn btn-primary col-6">+ Experience</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="employment-input" class="row hidden">
-                    <h4>Experience</h4>
-                    <p class="grey-text mb-2 small">
-                        List your previous work experiences. Each new line in responsibilities makes a new dotpoint.
-                    </p>
-                    <div id="employment-container">
-                        <div class="form-group experience-entry">
-                            <label>Job Title</label>
-                            <input type="text" name="jobTitle" class="form-control" placeholder="Enter job title" autocomplete="off">
-
-                            <label>Company Name</label>
-                            <input type="text" name="companyName" class="form-control" placeholder="Enter company name" autocomplete="off">
-
-                            <div class="d-flex mb-1">
-                                <div class="me-4">
-                                    <label>Start Date</label>
-                                    <div class="d-flex">
-                                        <div class="me-2">
-                                            <input type="text" id="startMonth" name="startMonth" class="form-control" placeholder="Month" autocomplete="off">
-                                        </div>
-                                        <div>
-                                            <input type="text" id="startYear" name="startYear" class="form-control" placeholder="Year" autocomplete="off">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label>End Date</label>
-                                    <div class="d-flex">
-                                        <div class="me-2">
-                                            <input type="text" id="endMonth" name="endMonth" class="form-control" placeholder="Month" autocomplete="off">
-                                        </div>
-                                        <div>
-                                            <input type="text" id="endYear" name="endYear" class="form-control" placeholder="Year" autocomplete="off">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <label>Job Responsibilities / Achievements</label>
-                            <textarea name="jobDetails" rows="5" class="form-control" placeholder="Enter key responsibilities and achievements..." autocomplete="off"></textarea>
-                        </div>
-                    </div>
-                    <div class="row justify-content-between input-btns">
-                        <div class="col-5 d-flex justify-content-start">
-                            <button class="btn col-10 text-center mt-3 mx-2 del-btn fw-bold">
-                                <i class="bi bi-trash"></i>
-                                Delete
-                            </button>
-                        </div>
-                        <div class="col-7 row justify-content-end">
-                            <button class="btn col-5 text-center mt-3 me-2 discard-btn fw-bold">Discard</button>
-                            <button class="btn btn-primary col-6 text-center mt-3 save-btn fw-bold">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-section p-3 m-2 rounded align-items-center">
                 <div id="education-header" class="row content-card">
                     <div class="content-card-header row">
                         <h4 class="col-9 m-0">Education</h4>
@@ -186,6 +113,78 @@
 
                             <label>Relevant Coursework / Achievements</label>
                             <textarea name="educationDetails" class="form-control" rows="5" placeholder="Enter coursework or achievements" autocomplete="off"></textarea>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between input-btns">
+                        <div class="col-5 d-flex justify-content-start">
+                            <button class="btn col-10 text-center mt-3 mx-2 del-btn fw-bold">
+                                <i class="bi bi-trash"></i>
+                                Delete
+                            </button>
+                        </div>
+                        <div class="col-7 row justify-content-end">
+                            <button class="btn col-5 text-center mt-3 me-2 discard-btn fw-bold">Discard</button>
+                            <button class="btn btn-primary col-6 text-center mt-3 save-btn fw-bold">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-section p-3 m-2 rounded align-items-center">
+                <div id="employment-header" class="row content-card">
+                    <div class="content-card-header row">
+                        <h4 class="col-9 m-0">Experience</h4>
+                        <p class="col-3 m-0 text-end">
+                            <svg class="arrow" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="10,15 3,5 17,5" fill="black" />
+                            </svg>
+                        </p>
+                    </div>
+                    <div id="employment-card-box" class="content-card-box hidden mt-3">
+                        <div class="text-center mt-3">
+                            <button type="button" id="add-experience" class="btn btn-primary col-6">+ Experience</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="employment-input" class="row hidden">
+                    <h4>Experience</h4>
+                    <p class="grey-text mb-2 small">
+                        List your previous work experiences. Each new line in responsibilities makes a new dotpoint.
+                    </p>
+                    <div id="employment-container">
+                        <div class="form-group experience-entry">
+                            <label>Job Title</label>
+                            <input type="text" name="jobTitle" class="form-control" placeholder="Enter job title" autocomplete="off">
+
+                            <label>Company Name</label>
+                            <input type="text" name="companyName" class="form-control" placeholder="Enter company name" autocomplete="off">
+
+                            <div class="d-flex mb-1">
+                                <div class="me-4">
+                                    <label>Start Date</label>
+                                    <div class="d-flex">
+                                        <div class="me-2">
+                                            <input type="text" id="startMonth" name="startMonth" class="form-control" placeholder="Month" autocomplete="off">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="startYear" name="startYear" class="form-control" placeholder="Year" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>End Date</label>
+                                    <div class="d-flex">
+                                        <div class="me-2">
+                                            <input type="text" id="endMonth" name="endMonth" class="form-control" placeholder="Month" autocomplete="off">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="endYear" name="endYear" class="form-control" placeholder="Year" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label>Job Responsibilities / Achievements</label>
+                            <textarea name="jobDetails" rows="5" class="form-control" placeholder="Enter key responsibilities and achievements..." autocomplete="off"></textarea>
                         </div>
                     </div>
                     <div class="row justify-content-between input-btns">
