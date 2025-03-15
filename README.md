@@ -37,8 +37,6 @@ Users are able to import/export existing resumes or data from a JSON file, allow
 <img src="Github-Images/import.gif" alt="gif of live preview" style="max-width: 100%;" />
 
 ## Technologies Used
-
-- jQuery
-- JavaScript
-- C#
-- PDFsharp
+- **jQuery & JavaScript**: Used for simplifying DOM manipulation and event handling in the web application, used for user interactions and provide dynamic content updates.
+- **C#**: Utilized for server-side development, particularly for handling PDF generation in the Resume Builder Web App. It allowed for the development of efficient back-end functionality and seamless integration with PDFsharp for creating downloadable resumes.
+- **PDFsharp**: Used in the Resume Builder Web App to generate and export resumes as PDF documents. PDFsharp helped in dynamically creating PDF files from user input, ensuring the app could offer a professional, shareable resume format.
