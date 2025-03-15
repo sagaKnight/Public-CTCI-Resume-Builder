@@ -28,13 +28,16 @@ function prepareResume() {
     const resumeContent = document.getElementById("resume-content");
     const resumeCopy = resumeContent.cloneNode(true);
     resumeCopy.querySelectorAll("h6, li").forEach(el => {
-        el.style.fontSize = "1.6em";
+        el.style.fontSize = "1.5em";
+    })
+    resumeCopy.querySelectorAll("span").forEach(el => {
+        el.style.fontSize = "1.45em";
     })
     resumeCopy.querySelectorAll("p").forEach(el => {
-        el.style.fontSize = "1.6em";
+        el.style.fontSize = "1.5em";
     })
     resumeCopy.querySelectorAll("h2").forEach(el => {
-        el.style.fontSize = "2.3em";
+        el.style.fontSize = "2.6em";
     })
     resumeCopy.querySelectorAll("hr").forEach(el => {
         el.style.height = '1px';

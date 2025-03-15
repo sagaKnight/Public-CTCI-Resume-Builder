@@ -1,6 +1,6 @@
 let savedPersonalData = {};
 let editingSectionData = null;
-let dataCounter = 1;
+let dataCounter = 0;
 let resumeInputs = {};
 
 /* Personal Section */
@@ -39,7 +39,8 @@ function getPersonalDetails() {
     let address = $("#address").val();
     let pNumber = $("#pNumber").val();
     let email = $("#email").val();
-    let extraInfo = $("#extraInfo").val();
+    let linkedIn = $("#linkedIn").val();
+    let extraLink = $("#extraLink").val();
 
     let data = {
         fName,
@@ -47,7 +48,8 @@ function getPersonalDetails() {
         address,
         pNumber,
         email,
-        extraInfo,
+        linkedIn,
+        extraLink,
     };
 
     return data;
@@ -67,23 +69,30 @@ function removePlaceholderClass() {
 
 function writePersonalDetails(data) {
     $("#resume-page-heading h2").text(data.fName + " " + data.lName);
-    $("#resume-page-heading p:nth-of-type(1)").text(data.address);
+    $("#resume-page-heading div:nth-of-type(1)").html('<span>' + data.address + '</span>');
+    $("#resume-page-heading div:nth-of-type(2)").addClass("contact-info");
     let contactHtml = '';
 
     contactHtml += '<span style="margin-right: 10px;">' + data.email + '</span>';
-    contactHtml += '<span style="margin-right: 10px;">|</span>'; 
+    contactHtml += '<span style="margin-right: 10px;">|</span>';
     contactHtml += '<span style="margin-right: 10px;">' + data.pNumber + '</span>';
+    if (data.linkedIn && data.linkedIn.trim() !== "") {
+        const linkedInUrl = data.linkedIn.startsWith('http') ? data.linkedIn : 'https://' + data.linkedIn;
+        const linkedInDisplay = data.linkedIn.replace('https://', '').replace('www.', '');
+        contactHtml += '<span style="margin-right: 10px;">|</span>';
+        contactHtml += '<span><a href="' + linkedInUrl + '" target="_blank">' + linkedInDisplay + '</a></span>';
+    }
 
-    if (data.extraInfo && data.extraInfo.trim() !== "") {
-        contactHtml += '<span style="margin-right: 10px;">|</span>'; 
-        if (!data.extraInfo.includes("www.")) {
-            contactHtml += '<span><a href="https://' + data.extraInfo + '" target="_blank">' + data.extraInfo + '</a></span>';
+    if (data.extraLink && data.extraLink.trim() !== "") {
+        contactHtml += '<span style="margin-right: 10px; margin-left: 10px;">|</span>';
+        if (!data.extraLink.includes("www.")) {
+            contactHtml += '<span><a href="https://' + data.extraLink + '" target="_blank">' + data.extraLink + '</a></span>';
         } else {
-            contactHtml += '<span>' + data.extraInfo + '</span>';
+            contactHtml += '<span>' + data.extraLink + '</span>';
         }
     }
 
-    $("#resume-page-heading p:nth-of-type(2)").html(contactHtml);
+    $("#resume-page-heading div:nth-of-type(2)").html(contactHtml);
 
     $("#personal-wrapper h5").text(
         data.fName || data.lName ? (data.fName || "") + " " + (data.lName || "") : "Your Name"
@@ -100,11 +109,11 @@ function rewritePersonalDetails() {
     $("#address").val(savedPersonalData.address);
     $("#pNumber").val(savedPersonalData.pNumber);
     $("#email").val(savedPersonalData.email);
-    $("#extraInfo").val(savedPersonalData.extraInfo);
+    $("#extraLink").val(savedPersonalData.extraLink);
 
     savedPersonalData.contactText = savedPersonalData.email + " | " + savedPersonalData.pNumber;
-    if (savedPersonalData.extraInfo) {
-        savedPersonalData.contactText += " | " + savedPersonalData.extraInfo;
+    if (savedPersonalData.extraLink) {
+        savedPersonalData.contactText += " | " + savedPersonalData.extraLink;
     }
     savedPersonalData = {};
 }
@@ -133,20 +142,29 @@ function setSectionHeading(section, headingText) {
             style: 'margin-top: 2px; margin-bottom: 2px;'
         });
 
-        newDiv.append(newH6);  
-        newDiv.append(newHr);   
+        newDiv.append(newH6);
+        newDiv.append(newHr);
 
         $(`#resume-content`).append(newDiv);
     }
 }
 
 function createNewDetails(data, section) {
+    updateDataCounter(section);
     if (section === "employment" || section === "education") {
         createDatedDetails(data, section);
     } else if (section === "technical" || section === "additional") {
         createUndatedDetails(data, section);
     } else {
         createLangDetails(data, section);
+    }
+}
+
+function updateDataCounter(section) {
+    if (!resumeInputs[section]) {
+        dataCounter = 0;
+    } else {
+        dataCounter = resumeInputs[section].length;
     }
 }
 
@@ -186,7 +204,7 @@ function createUndatedDetails(data, section) {
     // Create the title, languages, and repo link section
     let titleDiv = $('<div></div>').addClass('undated-title-info');
     let languages = data.technologiesUsed || '';
-    let repoLink = data.repoLink ? `<a href="${data.repoLink}" target="_blank">Project Repo</a>` : '';
+    let repoLink = data.repoLink ? `<a href="${data.repoLink}" target="_blank">Link</a>` : '';
 
     if (data.projectTitle) {
         titleDiv.append(`
@@ -290,7 +308,7 @@ function editLangDetails(newData, section, storedData, isSave) {
     let ul = $('<ul></ul>');
     newData.langTech.forEach(line => {
         let li = $(`<li>${line}</li>`);
-        ul.append(li);      
+        ul.append(li);
     });
     resumeDotpoints.append(ul);
     newCardDiv.find('h5').text(newData.langTech[0].length > 20 ? newData.langTech[0].slice(0, 20) + '...' : newData.langTech[0]);
@@ -352,7 +370,7 @@ function editDatedDetails(newData, section, storedData, isSave) {
     resumeDiv.find('ul').empty();
     let dotpointData = newData[section === "employment" ? "jobDetails" : "educationDetails"] || [];
     dotpointData.forEach(detail => {
-        if (detail?.trim()) {  
+        if (detail?.trim()) {
             resumeDiv.find('ul').append(`<li>${detail}</li>`);
         }
     });
@@ -362,7 +380,7 @@ function editDatedDetails(newData, section, storedData, isSave) {
     if (isSave) {
         $(`#${section}-input`).data("storedContentInfo" + editingSectionData, { newCard: newCardDiv, div: resumeDiv, data: newData });
     }
-    if (dotpointData && dotpointData[0] && dotpointData[0].length <= 1 || dotpointData.length === 1 && dotpointData[0].length <= 1) {
+    if (dotpointData && dotpointData[0] && dotpointData[0].length <= 1 && isSave || dotpointData.length === 1 && dotpointData[0].length <= 1 && isSave) {
         if ((!primaryTitle || primaryTitle.length <= 1) &&
             (!secondaryTitle || secondaryTitle.length <= 1) &&
             (!dateText || dateText.length <= 1)) {
@@ -388,7 +406,7 @@ function preloadFormInputs(editingSectionData, section) {
 }
 
 function discardContentBox(section) {
-    if (editingSectionData) {
+    if (editingSectionData !== null && editingSectionData >= 0) {
         let oldData = $(`#${section}-input`).data("storedContentInfo" + editingSectionData);
         clearContentInput(section);
         editContentDetails(oldData.data, section, true);
@@ -405,7 +423,7 @@ function removeHeading(section) {
 }
 
 function deleteContentBox(section) {
-    if (editingSectionData) {
+    if (editingSectionData !== null && editingSectionData >= 0) {
         let storedData = $(`#${section}-input`).data("storedContentInfo" + editingSectionData);
         deleteJSONInput(section, storedData.data);
         let foundDiv = $(`#resume-${section}`).find(storedData.div);
@@ -417,6 +435,8 @@ function deleteContentBox(section) {
             foundCard.remove();
         }
         removeHeading(section);
+        clearContentInput(section);
+        toggleContentInput(section);
         editingSectionData = null;
     }
 }
@@ -454,7 +474,7 @@ function getInputDetails(section) {
 }
 
 function clearContentInput(section) {
-    $(`#${section}-container .form-group`).find("input, textarea, select").val(""); 
+    $(`#${section}-container .form-group`).find("input, textarea, select").val("");
 }
 
 /* Add Buttons */
@@ -495,71 +515,47 @@ $("#add-lang").on('click', function () {
 })
 
 /* Save Buttons */
-
-function saveDatedData(data, section) {
-    if (editingSectionData) {
-        editContentDetails(data, section, true);
-        clearContentInput(section);
+function saveDataDetails(data, section, isSave) {
+    if (editingSectionData !== null && editingSectionData >= 0) {
+        editContentDetails(data, section, isSave);
     } else {
         createNewDetails(data, section);
+    }
+    if (isSave) {
+        saveJSONInput(section, data);
+        editingSectionData = null;
         clearContentInput(section);
     }
-    editingSectionData = null;
-    saveJSONInput(section, data);
 }
 
 $("#employment-input .input-btns div .save-btn").on('click', function () {
     let section = "employment";
     let newData = getInputDetails(section);
-    saveDatedData(newData, section);
+    saveDataDetails(newData, section, true);
 })
 
 $("#education-input .input-btns div .save-btn").on('click', function () {
     let section = "education";
     let newData = getInputDetails(section);
-    saveDatedData(newData, section);
+    saveDataDetails(newData, section, true);
 })
 
 $("#technical-input .input-btns div .save-btn").on('click', function () {
     let section = "technical";
     let newData = getInputDetails(section);
-    if (editingSectionData) {
-        editContentDetails(newData, section, true);
-        clearContentInput(section);
-    } else {
-        createNewDetails(newData, section);
-        clearContentInput(section);
-    }
-    editingSectionData = null;
-    saveJSONInput(section, newData);
+    saveDataDetails(newData, section, true);
 })
 
 $("#additional-input .input-btns div .save-btn").on('click', function () {
     let section = "additional";
     let newData = getInputDetails(section);
-    if (editingSectionData) {
-        editContentDetails(newData, section, true);
-        clearContentInput(section);
-    } else {
-        createNewDetails(newData, section);
-        clearContentInput(section);
-    }
-    editingSectionData = null;
-    saveJSONInput(section, newData);
+    saveDataDetails(newData, section, true);
 })
 
 $("#lang-input .input-btns div .save-btn").on('click', function () {
     let section = "lang";
     let newData = getInputDetails(section);
-    if (editingSectionData) {
-        editContentDetails(newData, section, true);
-        clearContentInput(section);
-    } else {
-        createNewDetails(newData, section);
-        clearContentInput(section);
-    }
-    editingSectionData = null;
-    saveJSONInput(section, newData);
+    saveDataDetails(newData, section, true);
 })
 
 /* Discard & Delete Buttons */
@@ -608,74 +604,54 @@ $("#lang-input .input-btns div .del-btn").on('click', function (e) {
 
 $("#employment-input .form-group input, #employment-input .form-group textarea").on('input', function () {
     let section = "employment";
-    if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
-    } else {
-        let newData = getInputDetails(section);
-        createNewDetails(newData, section);
-    }
+    let newData = getInputDetails(section);
+    saveDataDetails(newData, section);
 });
 
 $("#education-input .form-group input, #education-input .form-group textarea").on('input', function () {
     let section = "education";
-    if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
-    } else {
-        let newData = getInputDetails(section);
-        createNewDetails(newData, section);
-    }
+    let newData = getInputDetails(section);
+    saveDataDetails(newData, section);
 });
 
 $("#technical-input .form-group input, #technical-input .form-group textarea").on('input', function () {
     let section = "technical";
-    if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
-    } else {
-        let newData = getInputDetails(section);
-        createNewDetails(newData, section);
-    }
+    let newData = getInputDetails(section);
+    saveDataDetails(newData, section);
 });
 
 $("#additional-input .form-group input, #additional-input .form-group textarea").on('input', function () {
     let section = "additional";
-    if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
-    } else {
-        let newData = getInputDetails(section);
-        createNewDetails(newData, section);
-    }
+    let newData = getInputDetails(section);
+    saveDataDetails(newData, section);
 });
 
 $("#lang-input .form-group textarea").on('input', function () {
     let section = "lang";
-    if (editingSectionData) {
-        let newData = getInputDetails(section);
-        editContentDetails(newData, section);
-    } else {
-        let newData = getInputDetails(section);
-        createNewDetails(newData, section);
-    }
+    let newData = getInputDetails(section);
+    saveDataDetails(newData, section);
 });
 
 /* JSON Functions */
 
 function saveJSONInput(section, data) {
+    let isOverwrite = resumeInputs[section]?.[editingSectionData] != null;
     if (!resumeInputs[section]) {
         resumeInputs[section] = [];
     }
-    const shouldPush = Object.values(data).some(value => value.length > 1);
-    if (shouldPush) {
-        resumeInputs[section].push(data);
+    if (isOverwrite) {
+        resumeInputs[section][editingSectionData] = data;
+    } else {
+        const shouldPush = Object.values(data).some(value => value.length > 1) && !resumeInputs[section].find(existingData => existingData === data);
+        if (shouldPush) {
+            resumeInputs[section].push(data);
+        }
     }
 }
 
 function deleteJSONInput(section, data) {
     if (!resumeInputs[section]) {
-        return  
+        return
     }
     const indexFound = resumeInputs[section].findIndex(item =>
         Object.entries(data).every(([key, value]) => item[key] === value)
@@ -698,7 +674,7 @@ function importJSONInput() {
                 } else {
                     setSectionHeading(section, "Education");
                 }
-                saveDatedData(datedData, section);
+                saveDataDetails(datedData, section, true);
 
             });
         } else if (section === "technical" || section === "additional") {
@@ -708,12 +684,12 @@ function importJSONInput() {
                 } else {
                     setSectionHeading(section, "Additional Experience and Awards");
                 }
-                saveDatedData(undatedData, section);
+                saveDataDetails(undatedData, section, true);
             });
         } else if (section === "lang") {
             setSectionHeading(section, "Languages and Technologies");
             $.each(data, function (i, langData) {
-                saveDatedData(langData, section);
+                saveDataDetails(langData, section, true);
             });
         };
     });
@@ -725,17 +701,18 @@ function clearAllData() {
             <div id="resume-content">
                 <div id="resume-page-heading" style="display: flex; align-items: center; justify-content: space-between; flex-direction: column;">
                     <h2 style="width: 100%; text-align: center; margin: 0;"></h2>
-                    <p style="margin: 3px; text-align: center;"></p>
-                    <p style="margin: 3px; text-align: center;"></p>
+                    <div style="margin: 3px; text-align: center;"></div>
+                    <div style="margin: 3px; text-align: center; margin-bottom: 5px;"></div>
                 </div>
             </div>
         </div>
     `;
     const contentCards = document.querySelectorAll(".content-card-info");
     contentCards.forEach(card => card.remove());
-    dataCounter = 1;
+    dataCounter = 0;
     editingSectionData = null;
     savedPersonalData = {};
+    resumeInputs = {};
 }
 
 $("#exportJSON-btn").on("click", function () {
@@ -760,10 +737,10 @@ $("#jsonInput").on("change", function (e) {
         const reader = new FileReader();
         reader.onload = function (e) {
             try {
-                resumeInputs = JSON.parse(e.target.result);  // Parse the JSON data
+                clearAllData();
+                resumeInputs = JSON.parse(e.target.result);  // Parse the JSON 
                 $("#jsonInput").val('');
                 $('#jsonInput').parent().toggleClass("hidden");
-                clearAllData();
                 importJSONInput();
             } catch (error) {
                 console.error('Error parsing JSON:', error);
