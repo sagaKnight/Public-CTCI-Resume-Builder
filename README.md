@@ -4,13 +4,14 @@
   The app features real-time editing, a live preview, and PDF export functionality to help users easily craft professional resumes.</p>
 
 <img src="Github-Images/livepreview.gif" alt="gif of live preview" style="max-width: 100%;" />
-<img src="Github-Images/experience.png" alt="image of experience" style="width: 900px;" />
+<img src="Github-Images/import.gif" alt="image of experience" style="width: 900px;" />
 
 ## Table of Contents
 - [Main Features](#main-features)
   - [Simplified Structure](#simplified-structure) 
   - [PDF Export Functionality](#pdf-export-functionality)
-  - [Real-Time Editing](#real-time-editing) (WIP)
+  - [Real-Time Editing](#real-time-editing)
+  - [JSON Import/Export](#json-importing-and-exporting) 
 - [Technologies Used](#technologies-used)
 - [Installation Instructions](#installation-instructions)
 - [Usage](#usage)
@@ -27,7 +28,10 @@ Once the resume is complete, users can export it as a professional PDF for downl
 
 <img src="Github-Images/exportpdf.gif" alt="gif of live preview" style="max-width: 100%;" />
 
-### Real-Time Editing (WIP)
+### Real-Time Editing
 Users can see changes instantly as they make edits, enabling a seamless experience while creating or modifying their resumes.
 
 <img src="Github-Images/livepreview.gif" alt="gif of live preview" style="max-width: 100%;" />
+
+### JSON Importing and Exporting
+Users are able to import/export existing resumes or data from a JSON file, allowing them to quickly start editing without manually re-entering information. This feature ensures that users are able to update or refine their resumes efficiently, while also laying the foundation for future database storage. 
