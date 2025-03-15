@@ -35,3 +35,10 @@ Users can see changes instantly as they make edits, enabling a seamless experien
 Users are able to import/export existing resumes or data from a JSON file, allowing them to quickly start editing without manually re-entering information. This feature ensures that users are able to update or refine their resumes efficiently, while also laying the foundation for future database storage. 
 
 <img src="Github-Images/import.gif" alt="gif of live preview" style="max-width: 100%;" />
+
+## Technologies Used
+
+- jQuery
+- JavaScript
+- C#
+- PDFsharp
