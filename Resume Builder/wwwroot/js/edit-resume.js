@@ -1,6 +1,6 @@
 let savedPersonalData = {};
 let editingSectionData = null;
-let dataCounter = 0;
+let sectionDataCounters = {};
 let resumeInputs = {};
 
 /* Personal Section */
@@ -160,10 +160,10 @@ function createNewDetails(data, section) {
 }
 
 function updateDataCounter(section) {
-    if (!resumeInputs[section]) {
-        dataCounter = 0;
+    if (sectionDataCounters[section] == null) {
+        sectionDataCounters[section] = 0;
     } else {
-        dataCounter = resumeInputs[section].length;
+        sectionDataCounters[section]++;
     }
 }
 
@@ -182,7 +182,7 @@ function createLangDetails(data, section) {
     });
 
     let newCardInfoDiv = $('<div></div>').addClass('content-card-info border-top border-bottom pt-3 pb-3');
-    const value = dataCounter;
+    const value = sectionDataCounters[section];
     newCardInfoDiv.on('click', function () {
         editingSectionData = value;
         toggleContentInput(section);
@@ -192,7 +192,7 @@ function createLangDetails(data, section) {
       <h5 class="d-inline">${data.langTech[0].length > 8 ? data.langTech[0].slice(0, 8) + '...' : data.langTech[0]}</h5>
     `);
 
-    $(`#${section}-input`).data("storedContentInfo" + dataCounter, { newCard: newCardInfoDiv, div: newDiv, data: data });
+    $(`#${section}-input`).data("storedContentInfo" + sectionDataCounters[section], { newCard: newCardInfoDiv, div: newDiv, data: data });
     $(`#resume-${section}`).append(newDiv);
     $(`#${section}-card-box .text-center.mt-3`).before(newCardInfoDiv);
     editingSectionData = value;
@@ -232,7 +232,7 @@ function createUndatedDetails(data, section) {
     newDiv.append(projectDescriptionDiv);
 
     let newCardInfoDiv = $('<div></div>').addClass('content-card-info border-top border-bottom pt-3 pb-3');
-    const value = dataCounter;
+    const value = sectionDataCounters[section];
     newCardInfoDiv.on('click', function () {
         editingSectionData = value;
         toggleContentInput(section);
@@ -242,10 +242,9 @@ function createUndatedDetails(data, section) {
     newCardInfoDiv.append(`
         <h5 class="d-inline">${data.projectTitle || data.additionalTitle || ''}</h5>
     `);
-    $(`#${section}-input`).data("storedContentInfo" + dataCounter, { newCard: newCardInfoDiv, div: newDiv, data: data });
+    $(`#${section}-input`).data("storedContentInfo" + sectionDataCounters[section], { newCard: newCardInfoDiv, div: newDiv, data: data });
     $(`#resume-${section}`).append(newDiv);
     $(`#${section}-card-box .text-center.mt-3`).before(newCardInfoDiv);
-    dataCounter++;
     editingSectionData = value;
 }
 
@@ -271,8 +270,8 @@ function createDatedDetails(data, section) {
 `);
 
     let newCardInfoDiv = $('<div></div>').addClass('content-card-info border-top border-bottom pt-3 pb-3')
-    $(`#${section}-input`).data("storedContentInfo" + dataCounter, { newCard: newCardInfoDiv, div: newDiv, data: data });
-    const value = dataCounter;
+    $(`#${section}-input`).data("storedContentInfo" + sectionDataCounters[section], { newCard: newCardInfoDiv, div: newDiv, data: data });
+    const value = sectionDataCounters[section];
     newCardInfoDiv.on('click', function () {
         editingSectionData = value;
         toggleContentInput(section);
@@ -285,7 +284,6 @@ function createDatedDetails(data, section) {
     `);
     $(`#resume-${section}`).append(newDiv);
     $(`#${section}-card-box .text-center.mt-3`).before(newCardInfoDiv);
-    dataCounter++;
     editingSectionData = value;
 }
 
@@ -714,7 +712,7 @@ function clearAllData() {
     `;
     const contentCards = document.querySelectorAll(".content-card-info");
     contentCards.forEach(card => card.remove());
-    dataCounter = 0;
+    sectionDataCounters = {};
     editingSectionData = null;
     savedPersonalData = {};
     resumeInputs = {};
