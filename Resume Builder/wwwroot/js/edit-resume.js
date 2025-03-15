@@ -51,7 +51,6 @@ function getPersonalDetails() {
         linkedIn,
         extraLink,
     };
-
     return data;
 }
 function removePlaceholderClass() {
@@ -109,8 +108,8 @@ function rewritePersonalDetails() {
     $("#address").val(savedPersonalData.address);
     $("#pNumber").val(savedPersonalData.pNumber);
     $("#email").val(savedPersonalData.email);
+    $("#linkedIn").val(savedPersonalData.linkedIn);
     $("#extraLink").val(savedPersonalData.extraLink);
-
     savedPersonalData.contactText = savedPersonalData.email + " | " + savedPersonalData.pNumber;
     if (savedPersonalData.extraLink) {
         savedPersonalData.contactText += " | " + savedPersonalData.extraLink;
@@ -635,6 +634,10 @@ $("#lang-input .form-group textarea").on('input', function () {
 /* JSON Functions */
 
 function saveJSONInput(section, data) {
+    if (section === "personal") {
+        resumeInputs[section][0] = data;
+        return;
+    }
     let isOverwrite = resumeInputs[section]?.[editingSectionData] != null;
     if (!resumeInputs[section]) {
         resumeInputs[section] = [];
@@ -665,6 +668,8 @@ function importJSONInput() {
     $.each(resumeInputs, function (section, data) {
         if (section === "personal") {
             $.each(data, function (i, personalData) {
+                savedPersonalData = personalData;
+                rewritePersonalDetails();
                 savePersonalData(personalData);
             });
         } else if (section === "employment" || section === "education") {
