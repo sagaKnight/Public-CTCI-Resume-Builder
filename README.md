@@ -13,8 +13,6 @@
   - [Real-Time Editing](#real-time-editing)
   - [JSON Import/Export](#json-importing-and-exporting) 
 - [Technologies Used](#technologies-used)
-- [Installation Instructions](#installation-instructions)
-- [Usage](#usage)
 
 ## Main Features
 
@@ -31,7 +29,9 @@ Once the resume is complete, users can export it as a professional PDF for downl
 ### Real-Time Editing
 Users can see changes instantly as they make edits, enabling a seamless experience while creating or modifying their resumes.
 
-<img src="Github-Images/livepreview.gif" alt="gif of live preview" style="max-width: 100%;" />
+<img src="Github-Images/livepreview2.gif" alt="gif of live preview" style="max-width: 100%;" />
 
 ### JSON Importing and Exporting
 Users are able to import/export existing resumes or data from a JSON file, allowing them to quickly start editing without manually re-entering information. This feature ensures that users are able to update or refine their resumes efficiently, while also laying the foundation for future database storage. 
+
+<img src="Github-Images/import.gif" alt="gif of live preview" style="max-width: 100%;" />
